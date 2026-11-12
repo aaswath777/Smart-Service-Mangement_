@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Find Professionals | RepairLink{% endblock %}
+
+{% block content %}
+<section class="rl-page-header">
+    <div class="container">
+        <h1>Find Professionals</h1>
+        <p>Search by service, name or location, then compare ratings and experience.</p>
+    </div>
+</section>
+
+<section class="rl-section pt-4">
+    <div class="container">
+
+        <form method="get" class="rl-filter-card mb-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-lg-4">
+                    <label class="form-label rl-label" for="q">Search</label>
+                    <input type="text" id="q" name="q" class="form-control" value="{{ filters.q }}"
+                           placeholder="Service, name or area (e.g. AC, Velachery)">
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label class="form-label rl-label" for="category">Category</label>
+                    <select id="category" name="category" class="form-select">
+                        <option value="">All categories</option>
+                        {% for c in categories %}
+                        <option value="{{ c.slug }}" {% if filters.category == c.slug %}selected{% endif %}>{{ c.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label class="form-label rl-label" for="min_rating">Rating</label>
+                    <select id="min_rating" name="min_rating" class="form-select">
+                        <option value="">Any rating</option>
+                        <option value="3" {% if filters.min_rating == "3" %}selected{% endif %}>3+ stars</option>
+                        <option value="4" {% if filters.min_rating == "4" %}selected{% endif %}>4+ stars</option>
+                        <option value="4.5" {% if filters.min_rating == "4.5" %}selected{% endif %}>4.5+ stars</option>
+                    </select>
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label class="form-label rl-label" for="min_experience">Experience</label>
+                    <select id="min_experience" name="min_experience" class="form-select">
+                        <option value="">Any experience</option>
+                        <option value="2" {% if filters.min_experience == "2" %}selected{% endif %}>2+ years</option>
+                        <option value="5" {% if filters.min_experience == "5" %}selected{% endif %}>5+ years</option>
+                        <option value="10" {% if filters.min_experience == "10" %}selected{% endif %}>10+ years</option>
+                    </select>
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label class="form-label rl-label" for="sort">Sort by</label>
+                    <select id="sort" name="sort" class="form-select">
+                        <option value="rating" {% if filters.sort == "rating" %}selected{% endif %}>Top rated</option>
+                        <option value="experience" {% if filters.sort == "experience" %}selected{% endif %}>Most experienced</option>
+                        <option value="newest" {% if filters.sort == "newest" %}selected{% endif %}>Newest</option>
+                    </select>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="available" id="available" {% if filters.available %}checked{% endif %}>
+                    <label class="form-check-label" for="available">Only show available professionals</label>
+                </div>
+                <div class="d-flex gap-2">
+                    {% if has_filters %}<a href="{% url 'providers:list' %}" class="btn btn-rl-outline">Reset</a>{% endif %}
+                    <button type="submit" class="btn btn-rl-primary">Apply filters</button>
+                </div>
+            </div>
+        </form>
+
+        <p class="text-muted mb-3">{{ result_count }} professional{{ result_count|pluralize }} found</p>
+
+        <div class="row g-4">
+            {% for provider in page_obj %}
+            <div class="col-md-6 col-lg-4">
+                {% include "partials/provider_card.html" with p=provider %}
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="rl-empty">
+                    <i class="bi bi-search"></i>
+                    <h5>No professionals match your search</h5>
+                    <p class="text-muted">Try a different keyword or remove some filters.</p>
+                    <a href="{% url 'providers:list' %}" class="btn btn-rl-primary">Clear filters</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if page_obj.has_other_pages %}
+        <nav class="mt-5" aria-label="Pages">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                    <a class="page-link" href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "dashboard/layout.html" %}
+{% block title %}Dashboard | RepairLink{% endblock %}
+
+{% block dash_content %}
+<div class="mb-4">
+    <h2 class="mb-1">Welcome back, {{ user.first_name|default:user.username }}</h2>
+    <p class="text-muted mb-0">Here is what is happening with your bookings.</p>
+</div>
+
+<form method="get" action="{% url 'providers:list' %}" class="rl-search-box mb-4">
+    <i class="bi bi-search"></i>
+    <input type="text" name="q" placeholder="What service do you need?" aria-label="Search for a service">
+    <button class="btn btn-rl-accent" type="submit">Search</button>
+</form>
+
+<div class="row g-3 mb-4">
+    {% for stat in stats %}
+    <div class="col-6 col-xl-3">
+        <div class="rl-stat-card">
+            <span class="rl-feature-icon"><i class="bi {{ stat.icon }}"></i></span>
+            <div class="rl-stat-value">{{ stat.value }}</div>
+            <div class="rl-stat-label">{{ stat.label }}</div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="rl-panel">
+    <h5>Upcoming booking</h5>
+    {% if upcoming %}
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div>
+            <div class="fw-semibold fs-5">{{ upcoming.service.name }}</div>
+            <div class="text-muted">with {{ upcoming.provider.user.get_full_name }}</div>
+            <div class="mt-2 small">
+                <i class="bi bi-calendar-event text-muted"></i> {{ upcoming.scheduled_date|date:"D, d M Y" }}
+                &nbsp;<i class="bi bi-clock text-muted"></i> {{ upcoming.scheduled_time|time:"g:i A" }}
+            </div>
+            <div class="small text-muted mt-1"><i class="bi bi-geo-alt"></i> {{ upcoming.address|truncatechars:70 }}</div>
+        </div>
+        <span class="rl-status rl-status-{{ upcoming.status|lower }}">{{ upcoming.get_status_display }}</span>
+    </div>
+    {% else %}
+    <p class="text-muted mb-3">You have no upcoming bookings.</p>
+    <a href="{% url 'services:list' %}" class="btn btn-rl-primary btn-sm">Find a service</a>
+    {% endif %}
+</div>
+
+<div class="rl-panel">
+    <h5>Popular categories</h5>
+    <div class="d-flex flex-wrap gap-2">
+        {% for c in categories %}
+        <a href="{% url 'services:detail' c.slug %}" class="rl-chip"><i class="bi {{ c.icon }}"></i> {{ c.name }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="rl-panel">
+    <h5>Recent bookings</h5>
+    {% if recent_bookings %}
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead><tr><th>Service</th><th>Provider</th><th>Date</th><th>Status</th></tr></thead>
+            <tbody>
+                {% for b in recent_bookings %}
+                <tr>
+                    <td class="fw-semibold">{{ b.service.name }}</td>
+                    <td>{{ b.provider.user.get_full_name }}</td>
+                    <td class="text-nowrap">{{ b.scheduled_date|date:"d M Y" }}</td>
+                    <td><span class="rl-status rl-status-{{ b.status|lower }}">{{ b.get_status_display }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted mb-0">No bookings yet. Your bookings will appear here.</p>
+    {% endif %}
+</div>
+
+<div class="rl-panel">
+    <h5>Notifications</h5>
+    {% for n in notifications %}
+    <div class="rl-notice {% if not n.is_read %}unread{% endif %}">
+        <i class="bi bi-bell-fill"></i>
+        <div>
+            <div>{{ n.message }}</div>
+            <div class="text-muted small">{{ n.created_at|timesince }} ago</div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-muted mb-0">No notifications yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ category.name }} | RepairLink{% endblock %}
+
+{% block content %}
+<section class="rl-page-header">
+    <div class="container">
+        <a href="{% url 'services:list' %}" class="rl-back"><i class="bi bi-arrow-left"></i> All services</a>
+        <div class="d-flex align-items-center gap-3 mt-3">
+            <span class="rl-service-icon"><i class="bi {{ category.icon }}"></i></span>
+            <div>
+                <h1 class="mb-1">{{ category.name }}</h1>
+                <p class="mb-0">{{ category.description }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="rl-section">
+    <div class="container">
+        <h3 class="mb-3">Services and starting prices</h3>
+        <div class="rl-table-card mb-5">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr><th>Service</th><th>What it includes</th><th class="text-end">Starting price</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for s in services %}
+                        <tr>
+                            <td class="fw-semibold">{{ s.name }}</td>
+                            <td class="text-muted">{{ s.description }}</td>
+                            <td class="text-end fw-semibold">&#8377;{{ s.base_price|floatformat:"0" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-center text-muted py-4">No services listed yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <h3 class="mb-0">Professionals for {{ category.name }}</h3>
+            <a href="{% url 'providers:list' %}?category={{ category.slug }}" class="btn btn-rl-outline btn-sm">Search and filter</a>
+        </div>
+        <div class="row g-4">
+            {% for provider in providers %}
+            <div class="col-md-6 col-lg-4">
+                {% include "partials/provider_card.html" with p=provider %}
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="rl-empty">
+                    <i class="bi bi-person-x"></i>
+                    <h5>No professionals yet</h5>
+                    <p class="text-muted mb-0">No approved professionals offer this service right now. Please check back soon.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

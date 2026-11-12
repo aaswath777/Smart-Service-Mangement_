@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+.venv/
+venv/
+
+# Secrets - NEVER upload these
+.env
+
+# User uploads
+media/
+
+# IDE
+.idea/
+
+# Static files collected for deployment
+staticfiles/
+
+# OS files
+.DS_Store

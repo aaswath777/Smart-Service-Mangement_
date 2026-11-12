@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="rl-dash">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-3">
+                <nav class="rl-sidebar" aria-label="Dashboard menu">
+                    <a class="rl-side-link {% if active_nav == 'dashboard' %}active{% endif %}" href="{% url 'dashboard:customer' %}">
+                        <i class="bi bi-speedometer2"></i><span>Dashboard</span>
+                    </a>
+                    <a class="rl-side-link" href="{% url 'services:list' %}">
+                        <i class="bi bi-search"></i><span>Find Services</span>
+                    </a>
+
+                    <!-- DEVELOPMENT PLACEHOLDERS: connected in later phases -->
+                    <span class="rl-side-link disabled"><i class="bi bi-calendar-check"></i><span>My Bookings</span><em class="rl-soon">Soon</em></span>
+                    <span class="rl-side-link disabled"><i class="bi bi-chat-dots"></i><span>Messages</span><em class="rl-soon">Soon</em></span>
+                    <span class="rl-side-link disabled"><i class="bi bi-bell"></i><span>Notifications</span><em class="rl-soon">Soon</em></span>
+                    <span class="rl-side-link disabled"><i class="bi bi-star"></i><span>Reviews</span><em class="rl-soon">Soon</em></span>
+
+                    <a class="rl-side-link {% if active_nav == 'profile' %}active{% endif %}" href="{% url 'dashboard:customer_profile' %}">
+                        <i class="bi bi-person"></i><span>Profile</span>
+                    </a>
+                    <form method="post" action="{% url 'accounts:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="rl-side-link rl-side-logout"><i class="bi bi-box-arrow-right"></i><span>Logout</span></button>
+                    </form>
+                </nav>
+            </div>
+            <div class="col-lg-9">
+                {% block dash_content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

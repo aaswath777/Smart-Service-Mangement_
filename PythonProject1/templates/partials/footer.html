@@ -1,0 +1,45 @@
+<footer class="rl-footer">
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-lg-4">
+                <a class="rl-logo text-white" href="{% url 'core:home' %}">
+                    <span class="rl-logo-icon"><i class="bi bi-tools"></i></span>
+                    Repair<span class="rl-logo-accent">Link</span>
+                </a>
+                <p class="mt-3 mb-0 rl-footer-text">
+                    Connect. Repair. Done.<br>
+                    Find trusted service professionals for repairs, maintenance,
+                    and everyday service needs.
+                </p>
+            </div>
+            <div class="col-6 col-lg-2">
+                <h6>Company</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-lg-3">
+                <h6>Popular Services</h6>
+                <ul class="list-unstyled">
+                                       <li><a href="{% url 'services:detail' 'vehicle-repair' %}">Vehicle Repair</a></li>
+                    <li><a href="{% url 'services:detail' 'ac-service' %}">AC Service</a></li>
+                    <li><a href="{% url 'services:detail' 'electrical-service' %}">Electrical Service</a></li>
+                    <li><a href="{% url 'services:detail' 'plumbing' %}">Plumbing</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3">
+                <h6>For Professionals</h6>
+                <ul class="list-unstyled">
+                                       <li><a href="{% url 'accounts:register_provider' %}">Become a Service Provider</a></li>
+                    <li><a href="{% url 'accounts:login' %}">Provider Login</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr class="rl-footer-line">
+        <p class="text-center mb-0 rl-footer-text small">
+            &copy; 2026 RepairLink. All rights reserved. A college project.
+        </p>
+    </div>
+</footer>

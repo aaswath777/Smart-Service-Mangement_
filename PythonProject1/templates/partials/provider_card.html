@@ -1,0 +1,48 @@
+{% load rl_extras %}
+<div class="rl-provider-card">
+    <div class="d-flex gap-3 align-items-center">
+        {% if p.profile_picture %}
+        <img class="rl-avatar" src="{{ p.profile_picture.url }}" alt="{{ p.user.get_full_name }}">
+        {% else %}
+        <span class="rl-avatar rl-avatar-initials">{{ p.user.first_name|slice:":1" }}{{ p.user.last_name|slice:":1" }}</span>
+        {% endif %}
+        <div>
+            <h5 class="mb-0">{{ p.user.get_full_name }}</h5>
+            <div class="text-muted small">{{ p.headline|default:"Service professional" }}</div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        {% if p.rating_count %}
+        {{ p.rating_avg|stars }}
+        <strong class="ms-1">{{ p.rating_avg|floatformat:1 }}</strong>
+        <span class="text-muted small">({{ p.rating_count }} review{{ p.rating_count|pluralize }})</span>
+        {% else %}
+        <span class="text-muted small">No reviews yet</span>
+        {% endif %}
+    </div>
+
+    <div class="mt-2">
+        {% for c in p.categories.all %}<span class="rl-tag">{{ c.name }}</span>{% endfor %}
+    </div>
+
+    <ul class="rl-provider-meta">
+        <li><i class="bi bi-briefcase-fill"></i> {{ p.experience_years }} year{{ p.experience_years|pluralize }} experience</li>
+        <li><i class="bi bi-geo-alt-fill"></i> {{ p.service_area }}, {{ p.city }}</li>
+        <li>
+            {% if p.is_available %}
+            <i class="bi bi-circle-fill text-success"></i> Available
+            {% else %}
+            <i class="bi bi-circle-fill text-secondary"></i> Currently busy
+            {% endif %}
+        </li>
+    </ul>
+
+    <p class="text-muted small mb-3">{{ p.bio|truncatechars:90 }}</p>
+
+    <div class="d-flex gap-2 mt-auto">
+        <a href="{% url 'providers:detail' p.pk %}" class="btn btn-rl-outline btn-sm flex-fill">View Profile</a>
+        <!-- DEVELOPMENT PLACEHOLDER: in Phase 8 this will open the booking form -->
+        <a href="{% url 'providers:detail' p.pk %}#book" class="btn btn-rl-primary btn-sm flex-fill">Book Service</a>
+    </div>
+</div>
